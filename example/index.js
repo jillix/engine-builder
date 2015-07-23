@@ -11,7 +11,7 @@ EngineTools.getComposition("service-dev", { iName: true }, function (err, data) 
     }
 
     // Parse it
-    Parser(data, {}, {}, function (err, data) {
+    Parser(data, {}, {}, {}, function (err, data) {
         console.log(err, data);
     });
 });
