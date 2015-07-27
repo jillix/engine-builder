@@ -1,17 +1,23 @@
 // Dependencies
 var Parser = require("../lib")
   , EngineTools = require("engine-tools")
+  , Typpy = require("typpy")
+  , SameTime = require("same-time")
   ;
 
-// Get the composition
-EngineTools.getComposition("service-dev", { iName: true }, function (err, data) {
+// Constants
+const APP = "service-dev";
 
-    if (err) {
-        return console.log("Failed to get the composition.");
-    }
-
-    // Parse it
-    Parser(data, {}, {}, {}, function (err, data) {
+SameTime([
+    // Instances
+    EngineTools.getComposition.bind(EngineTools, APP, { iName: true })
+    // Get service file
+  , EngineTools.getService.bind(EngineTools, APP)
+  , EngineTools.getModuleInfo.bind(EngineTools, APP)
+], function (err, data) {
+    if (err) { return console.error(err); }
+    Parser(data[0], data[1], data[2], function (err, data) {
         console.log(err, data);
     });
 });
+
