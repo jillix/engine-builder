@@ -17,6 +17,7 @@ SameTime([
 ], function (err, data) {
     if (err) { return console.error(err); }
     Parser(data[0], data[1], data[2], function (err, data) {
+        debugger
         console.log(err, data);
     });
 });
