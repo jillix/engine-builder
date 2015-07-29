@@ -346,7 +346,7 @@ NodeElm.prototype.hasFlow = function () {
     return !!this.flow.length;
 };
 
-NodeElm.prototype.color = function (c) {
+NodeElm.prototype.setColor = function (c) {
     return this.color = [this.color, c][arguments.length];
 };
 
