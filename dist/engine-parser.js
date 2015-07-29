@@ -226,6 +226,7 @@ Composition.prototype.addInstance = function (cInstance, isServer) {
 };
 
 Composition.prototype.addInstances = function (instances) {
+
     var self = this
       , cColor = null
       , cPos = null
@@ -289,8 +290,6 @@ Composition.prototype.addConnections = function () {
     });
 };
 
-
-module.exports = Composition;
 
 module.exports = Composition;
 
