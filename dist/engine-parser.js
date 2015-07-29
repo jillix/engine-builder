@@ -251,6 +251,7 @@ Composition.prototype.parseFlow = function () {
 };
 
 Composition.prototype.addConnections = function () {
+
     var self = this;
 
     IterateObject(self.nodes, function (name, node) {
@@ -293,7 +294,7 @@ Composition.prototype.addConnections = function () {
 
 module.exports = Composition;
 
-},{"./line":3,"./node":4,"./node/subelm":5,"deffy":7,"enny":8,"iterate-object":13,"typpy":14,"ul":15}],3:[function(require,module,exports){
+},{"./line":3,"./node":4,"./node/subelm":5,"deffy":7,"enny":8,"iterate-object":14,"typpy":15,"ul":16}],3:[function(require,module,exports){
 function Line(input) {
     this.source = input.source;
     this.target = input.target;
@@ -335,7 +336,7 @@ function NodeElm(data, isServer) {
     this.domains = [];
     this.name = data.name;
     this.flow = Deffy(isServer ? data.flow : (data.client && data.client.flow), []);
-    this.pFlow = Enny.instanceFlow(this.flow, this.name);
+    this.pFlow = Enny.parseFlow(this.flow, this.name);
     this.raw = data;
 }
 
@@ -369,7 +370,7 @@ NodeElm.prototype.addSubElement = function (type, elm) {
 
 module.exports = NodeElm;
 
-},{"./subelm":5,"deffy":7,"enny":8,"typpy":14}],5:[function(require,module,exports){
+},{"./subelm":5,"deffy":7,"enny":8,"typpy":15}],5:[function(require,module,exports){
 var Deffy = require("deffy")
   , Typpy = require("typpy")
   ;
@@ -412,7 +413,7 @@ SubElm.Id = SubElmId;
 
 module.exports = SubElm;
 
-},{"deffy":7,"typpy":14}],6:[function(require,module,exports){
+},{"deffy":7,"typpy":15}],6:[function(require,module,exports){
 // Dependencies
 var Typpy = require("typpy")
   , NodeElm = require("./composition/node")
@@ -441,7 +442,7 @@ if (typeof window === "object") {
 
 module.exports = Parser;
 
-},{"./composition":2,"./composition/node":4,"enny":8,"typpy":14}],7:[function(require,module,exports){
+},{"./composition":2,"./composition/node":4,"enny":8,"typpy":15}],7:[function(require,module,exports){
 // Dependencies
 var Typpy = require("typpy");
 
@@ -490,11 +491,12 @@ function Deffy(input, def, options) {
 
 module.exports = Deffy;
 
-},{"typpy":14}],8:[function(require,module,exports){
+},{"typpy":15}],8:[function(require,module,exports){
 var Ul = require("ul");
 var Typpy = require("typpy");
 var Deffy = require("deffy");
-var IterateObject = require("iterate-object")
+var IterateObject = require("iterate-object");
+var SetOrGet = require("set-or-get");
 
 const TYPES = {
     // :some/datahandler
@@ -529,7 +531,11 @@ function Enny() {
     };
 }
 
-Enny.prototype.toJSON = function (a, b, c) {
+Enny.prototype.toObject = function () {
+    return JSON.parse(JSON.stringify(this));
+};
+
+Enny.prototype.toJSON = function () {
     var self = this;
     var obj = {};
     Object.keys(self.instances).forEach(function (name) {
@@ -636,6 +642,10 @@ Enny.Instance.prototype.addFlow = function (flElm, options, callback) {
     callback();
 };
 
+Enny.Instance.prototype.toObject = function () {
+    return JSON.parse(JSON.stringify(this))._;
+};
+
 Enny.FlowElement = function FlowElement (data) {
     var self = this;
     if (Typpy(data) === "flowelement") {
@@ -692,6 +702,13 @@ Enny.FlowComponent = function FlowComponent (data) {
     if (data.event) {
         data.type = TYPES.listener;
     }
+    if (data.stream) {
+        data.type = TYPES.streamHandler;
+        data.handler = data.stream;
+    }
+    if (data.link) {
+        data.type = TYPES.link;
+    }
     self.data = Ul.clone(data);
 };
 
@@ -704,6 +721,11 @@ Enny.FlowComponent.prototype.toFlow = function () {
                 return [data.event];
             }
             return data.event;
+        case TYPES.link:
+            return new Enny.Handler({
+                args: [data.link],
+                handler: TYPES.link
+            }).toFlow();
         case TYPES.dataHandler:
         case TYPES.streamHandler:
             return new Enny.Handler({
@@ -822,72 +844,15 @@ Enny.instanceFlow = function (_input, name) {
 
 Enny.parseFlow = function (_input, instName) {
 
-    var input = Ul.clone(_input);
-    var output = {
-        // TODO
-        loads: {},
-        dataHandlers: {},
-        errorHandlers: {},
-        streamHandlers: {},
-        emits: {},
-        listeners: {}
-    };
+    var out = {};
 
-    for (var i = 0; i < input.length; ++i) {
-        var comp = input[i];
-        var type = Typpy(comp[0])
-        if (type !== "string") {
-            continue;
-        }
-        var eventName = comp[0];
-        var ev = output._events[eventName] = output._events[eventName] || [];
-        ev.push(comp);
-        comp.shift();
-    }
-
-    var evs = Object.keys(output._events);
-    for (var i = 0; i < evs.length; ++i) {
-        var cEvent = evs[i];
-        var cFlow = output._events[cEvent];
-        var cEv = output.events[cEvent] = [];
-        for (var ii = 0; ii < cFlow.length; ++ii) {
-            var cFlowElement = cFlow[ii];
-            var pFlowElement = [];
-            for (var iii = 0; iii < cFlowElement.length; ++iii) {
-                var cComponent = cFlowElement[iii];
-                if (Typpy(cComponent, String)) {
-                    cComponent = [cComponent];
-                }
-                var cElm = {};
-                if (cComponent[0] === TYPES.load) {
-                    cElm.type = TYPES.load;
-                    cElm.args = cComponent.slice(1);
-                } else if (Enny.parseMethod(cComponent[0]).method === "emit") {
-                    cElm.type = TYPES.emit;
-                    cElm.args = cComponent.slice(1).map(function (c) {
-                        return Enny.parseMethod(c, instName);
-                    });
-                }
-
-                if (!cElm.type) {
-                    cElm = Enny.parseMethod(cComponent[0], instName);
-                    cElm.args = cComponent.slice(1);
-                    cElm.type = TYPES.streamHandler;
-                }
-
-                pFlowElement.push(cElm);
-            }
-
-            cEv.push(pFlowElement);
-        }
-    }
-
-    var out = [];
-    Object.keys(output.events).forEach(function (c) {
-        out.push({
-            on: c,
-            _: output.events[c]
+    IterateObject(_input, function (_, elm) {
+        var ev = SetOrGet(out, elm[0], []);
+        var p = [];
+        IterateObject(elm.slice(1), function (_, comp) {
+            p.push(Enny.parseFlowComponent(comp, instName));
         });
+        ev.push(p);
     });
 
     return out;
@@ -909,9 +874,30 @@ Enny.TYPES = TYPES;
 
 module.exports = Enny;
 
-},{"deffy":9,"iterate-object":13,"typpy":10,"ul":11}],9:[function(require,module,exports){
+},{"deffy":9,"iterate-object":14,"set-or-get":10,"typpy":11,"ul":12}],9:[function(require,module,exports){
 arguments[4][7][0].apply(exports,arguments)
-},{"dup":7,"typpy":10}],10:[function(require,module,exports){
+},{"dup":7,"typpy":11}],10:[function(require,module,exports){
+// Dependencies
+var Deffy = require("deffy");
+
+/**
+ * SetOrGet
+ * Sets or gets an object field value.
+ *
+ * @name SetOrGet
+ * @function
+ * @param {Object|Array} input The cache/input object.
+ * @param {String|Number} field The field you want to update/create.
+ * @param {Object|Array} def The default value.
+ * @return {Object|Array} The field value.
+ */
+function SetOrGet(input, field, def) {
+    return input[field] = Deffy(input[field], def);
+}
+
+module.exports = SetOrGet;
+
+},{"deffy":9}],11:[function(require,module,exports){
 /**
  * Typpy
  * Gets the type of the input value or compares it
@@ -995,7 +981,7 @@ Typpy.get = function (input, str) {
 
 module.exports = Typpy;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (process){
 // Dependencies
 var Typpy = require("typpy")
@@ -1138,7 +1124,7 @@ Ul.prototype.home = function () {
 module.exports = new Ul();
 
 }).call(this,require('_process'))
-},{"_process":1,"deffy":9,"typpy":12}],12:[function(require,module,exports){
+},{"_process":1,"deffy":9,"typpy":13}],13:[function(require,module,exports){
 /**
  * Typpy
  * Gets the type of the input value.
@@ -1167,7 +1153,7 @@ function Typpy(input) {
 
 module.exports = Typpy;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /**
  * IterateObject
  * Iterates an object. Note the object field order may differ.
@@ -1186,10 +1172,10 @@ function IterateObject(obj, fn) {
 
 module.exports = IterateObject;
 
-},{}],14:[function(require,module,exports){
-arguments[4][10][0].apply(exports,arguments)
-},{"dup":10}],15:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 arguments[4][11][0].apply(exports,arguments)
-},{"_process":1,"deffy":7,"dup":11,"typpy":16}],16:[function(require,module,exports){
+},{"dup":11}],16:[function(require,module,exports){
 arguments[4][12][0].apply(exports,arguments)
-},{"dup":12}]},{},[6]);
+},{"_process":1,"deffy":7,"dup":12,"typpy":17}],17:[function(require,module,exports){
+arguments[4][13][0].apply(exports,arguments)
+},{"dup":13}]},{},[6]);
