@@ -149,10 +149,40 @@ Composition.prototype.connect = function (s, t) {
 };
 
 Composition.prototype.prepare = function () {
-    return {
-        nodes: this.nodes
-      , lines: this.lines
+    var out = {
+        nodes: {}
+      , lines: {}
     };
+
+    IterateObject(this.nodes, function (id, node) {
+        var cNode = out.nodes[id] = {
+            id: node.id.toString(),
+            color: node.color,
+            domains: node.domains,
+            icon: node.icon,
+            name: node.label,
+            subelms: {}
+        };
+
+        IterateObject(node.subelms, function (sid, selm) {
+            cNode.subelms[sid] = {
+                id: selm.id.toString(),
+                label: selm.label,
+                type: selm.type,
+                icon: selm.icon
+            };
+        });
+    });
+
+    IterateObject(this.lines, function (id, line) {
+        out.lines[id] = {
+            source: line.source.id.toString(),
+            target: line.target.id.toString(),
+            id: line.id.toString()
+        };
+    });
+
+    return out;
 };
 
 Composition.prototype.addModuleFlow = function (inst) {
@@ -174,15 +204,21 @@ Composition.prototype.addModuleFlow = function (inst) {
 
 Composition.prototype.addInstance = function (cInstance, isServer) {
     var self = this
-      , cColor = null
-      , cPos = null
+      , info = null
       , cNode = null
       ;
 
     cNode = self.addNode(cInstance, isServer);
+    info = self.appService.e[cNode.name];
 
-    !!(cColor = self.appService[cNode.name]) && cColor.color && cNode.color(cColor.color);
-    !!(cPos = self.appService[cNode.name]) && cPos.pos && cNode.position(cPos.pos);
+    if (info) {
+        if (info.color) {
+            cNode.setColor(info.color);
+        }
+        if (info.pos) {
+            cNode.position(info.pos);
+        }
+    }
 
     if (cInstance.flow && !isServer) {
         self.addInstance(cInstance, true);
@@ -229,8 +265,8 @@ Composition.prototype.addConnections = function () {
                     name: comp.instance,
                     isServer: !!comp.serverMethod
                 });
-                var source = node.subelements[new SubElm.Id(Enny.TYPES.listener, event, node.name)];
-                var target = targetNode.subelements[new SubElm.Id(Enny.convertToOn(comp.type), SubElm.Name(comp), comp.instance)];
+                var source = node.subelms[new SubElm.Id(Enny.TYPES.listener, event, node.name)];
+                var target = targetNode.subelms[new SubElm.Id(Enny.convertToOn(comp.type), SubElm.Name(comp), comp.instance)];
                 if (!source || !target) {
                     //debugger
                     // TODO Add data handlers
@@ -240,7 +276,7 @@ Composition.prototype.addConnections = function () {
             });
         });
 
-        //IterateObject(node.subelements, function (id, subelm) {
+        //IterateObject(node.subelms, function (id, subelm) {
 
         //});
 
@@ -253,6 +289,8 @@ Composition.prototype.addConnections = function () {
     });
 };
 
+
+module.exports = Composition;
 
 module.exports = Composition;
 
