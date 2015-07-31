@@ -6,7 +6,7 @@ var Parser = require("../lib")
   ;
 
 // Constants
-const APP = "sed";
+const APP = "engine-test";
 
 SameTime([
     // Instances
@@ -20,4 +20,3 @@ SameTime([
         console.log(err, data.prepare());
     });
 });
-
