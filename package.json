@@ -1,14 +1,37 @@
 {
   "name": "engine-parser",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Engine composition parser.",
+  "main": "lib/index.js",
   "directories": {
     "example": "example"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "dependencies": {
+    "enny": "^1.0.0",
+    "deffy": "^2.0.0",
+    "engine-tools": "^1.21.0",
+    "iterate-object": "^1.1.0",
+    "same-time": "^2.0.0",
+    "set-or-get": "^1.0.0",
+    "typpy": "^2.1.0",
+    "ul": "^5.0.0"
   },
-  "author": "",
-  "license": "ISC"
+  "devDependencies": {},
+  "scripts": {
+    "test": "node example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IonicaBizau/engine-parser.git"
+  },
+  "keywords": [
+    "jillix",
+    "engine"
+  ],
+  "author": "jillix <contact@jillix.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IonicaBizau/engine-parser/issues"
+  },
+  "homepage": "https://github.com/IonicaBizau/engine-parser"
 }
