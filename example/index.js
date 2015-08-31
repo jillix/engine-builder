@@ -6,7 +6,7 @@ var Parser = require("../lib")
   ;
 
 // Constants
-const APP = "service-dev";
+const APP = "engine-test";
 
 SameTime([
     // Instances
