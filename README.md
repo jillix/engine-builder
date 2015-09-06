@@ -53,17 +53,7 @@ SameTime([
 
 ## Documentation
 
-### `Parser(input, appService, moduleInfo, callback)`
-Creates a new `Parser` instance.
-
-#### Params
-- **Object** `input`: The application instances object.
-- **Object** `appService`: The application service object.
-- **Object** `moduleInfo`: An object containing the module information.
-- **Function** `callback`: The callback function.
-
-#### Return
-- **Parser** The `Parser` instance.
+For full API reference, see the [DOCUMENTATION.md][docs] file.
 
 ## How to contribute
 Have an idea? Found a bug? See [how to contribute][contributing].
