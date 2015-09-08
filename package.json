@@ -27,10 +27,11 @@
     "deffy": "^2.0.0",
     "engine-tools": "^1.19.0",
     "enny": "^1.0.0",
+    "idy": "^1.0.0",
+    "iterate-object": "^1.1.0",
     "r-json": "^1.0.0",
     "same-time": "^2.0.0",
     "set-or-get": "^1.0.0",
-    "iterate-object": "^1.1.0",
     "typpy": "^2.1.0",
     "ul": "^5.0.0",
     "w-json": "^1.0.0"
