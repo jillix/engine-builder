@@ -6,32 +6,33 @@
   "directories": {
     "example": "example"
   },
-  "dependencies": {
-    "enny": "^1.0.0",
-    "deffy": "^2.0.0",
-    "engine-tools": "^1.21.0",
-    "iterate-object": "^1.1.0",
-    "same-time": "^2.0.0",
-    "set-or-get": "^1.0.0",
-    "typpy": "^2.1.0",
-    "ul": "^5.0.0"
-  },
   "devDependencies": {},
   "scripts": {
     "test": "node example"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/IonicaBizau/engine-parser.git"
+    "url": "git+https://github.com/IonicaBizau/engine-parser.git"
   },
   "keywords": [
     "jillix",
     "engine"
   ],
   "author": "jillix <contact@jillix.com>",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/IonicaBizau/engine-parser/issues"
   },
-  "homepage": "https://github.com/IonicaBizau/engine-parser"
+  "homepage": "https://github.com/IonicaBizau/engine-parser",
+  "dependencies": {
+    "deffy": "^2.0.0",
+    "engine-tools": "^1.19.0",
+    "enny": "^1.0.0",
+    "r-json": "^1.0.0",
+    "same-time": "^2.0.0",
+    "set-or-get": "^1.0.0",
+    "iterate-object": "^1.1.0",
+    "typpy": "^2.1.0",
+    "ul": "^5.0.0",
+    "w-json": "^1.0.0"
+  }
 }
