@@ -16,7 +16,10 @@ SameTime([
   , EngineTools.getModuleInfo.bind(EngineTools, APP)
 ], function (err, data) {
     if (err) { return console.error(err); }
-    Parser(data[0], data[1], data[2], function (err, data) {
+    Parser(data[0], data[1], data[2], {
+        handleServer: false
+      , parseLines: false
+    }, function (err, data) {
         console.log(err, data.prepare());
     });
 });
