@@ -30,6 +30,7 @@
     "enny": "ionicabizau/enny",
     "idy": "^1.2.0",
     "iterate-object": "^1.3.0",
+    "map-o": "^2.0.0",
     "r-json": "^1.0.0",
     "same-time": "^2.0.0",
     "set-or-get": "^1.0.0",
