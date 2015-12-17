@@ -1,0 +1,101 @@
+{
+    "config": {
+        "templates": {
+            "layout": {
+                "to": ".section",
+                "html": "/layout_test.html",
+                "clear": true,
+                "title": "Engine Tests",
+                "events": {
+                    "runTest": [
+                        {
+                            "on": "click",
+                            "sel": "#runTest"
+                        }
+                    ]
+                }
+            }
+        },
+        "states": {
+            "hideAll" :[
+                {
+                    "sel": ".section .runTest",
+                    "tmpl": "layout",
+                    "add": ["hide"]
+                },
+                {
+                    "sel": ".section .testResults",
+                    "tmpl": "layout",
+                    "add": ["hide"]
+                },
+                {
+                    "sel": ".section .testRunning",
+                    "tmpl": "layout",
+                    "add": ["hide"]
+                },
+                {
+                    "sel": ".section .testError",
+                    "tmpl": "layout",
+                    "add": ["hide"]
+                }
+            ],
+            "runTest": [
+                {
+                    "states": ["hideAll"],
+                    "sel": ".section .runTest",
+                    "tmpl": "layout",
+                    "rm": ["hide"]
+                }
+            ],
+            "results": [
+                {
+                    "states": ["hideAll"],
+                    "sel": ".section .testResults",
+                    "tmpl": "layout",
+                    "rm": ["hide"]
+                }
+            ],
+            "running": [
+                {
+                    "states": ["hideAll"],
+                    "sel": ".section .testRunning",
+                    "tmpl": "layout",
+                    "rm": ["hide"]
+                }
+            ],
+            "error": [
+                {
+                    "states": ["hideAll"],
+                    "sel": ".section .testError",
+                    "tmpl": "layout",
+                    "rm": ["hide"]
+                }
+            ]
+        }
+    },
+    "flow": {
+        "runTest": {
+            "d": [
+                [">>test", {"to": "test_client"}]
+            ]
+        },
+        "reset": {
+            "d": [
+                [":state", {"name": "runTest"}]
+            ]
+        },
+        "results": {
+            "d": [
+                [":state", {"name": "results"}]
+            ]
+        }
+    },
+    "markup": [
+      "/layout_test.html"
+    ],
+  "roles": {
+    "*": true
+  },
+  "name": "layout_test",
+  "module": "view"
+}

@@ -1,0 +1,94 @@
+{
+    "flow": {
+        "ready": {
+            "d": [
+                [":render", {"tmpl": "layout"}],
+                [":layout_test/render", {"tmpl": "layout"}],
+                [">>reset", {"to": "layout_test"}], 
+                [".state", {"name": "content", "tmpl": "layout"}]
+            ],
+            "r": "errEvent"
+        },
+        "errEvent": {
+            "d": [
+                [":render", {"tmpl": "layout"}],
+                [":state", {"name": "error", "tmpl": "layout"}]
+            ]
+        }
+    },
+    "config": {
+        "title": "Engine Test",
+        "templates": {
+            "layout": {
+                "to": "body",
+                "html": "/layout.html"
+            }
+        },
+        "states": {
+            "content": [
+                {
+                    "sel": ".loader",
+                    "template": "layout",
+                    "add": ["hide"]
+                },
+                {
+                    "sel": ".error",
+                    "template": "layout",
+                    "add": ["hide"]
+                },
+                {
+                    "sel": ".section",
+                    "template": "layout",
+                    "rm": ["hide"]
+                }
+            ],
+            "loader": [
+                {
+                    "sel": ".section",
+                    "template": "layout",
+                    "add": ["hide"]
+                },
+                {
+                    "sel": ".error",
+                    "template": "layout",
+                    "add": ["hide"]
+                },
+                {
+                    "sel": ".loader",
+                    "template": "layout",
+                    "rm": ["hide"]
+                }
+            ],
+            "error": [
+                {
+                    "sel": ".loader",
+                    "template": "layout",
+                    "add": ["hide"]
+                },
+                {
+                    "sel": ".section",
+                    "template": "layout",
+                    "add": ["hide"]
+                },
+                {
+                    "sel": ".error",
+                    "template": "layout",
+                    "rm": ["hide"]
+                }
+            ]
+        }
+    },
+    "markup": [
+      "/layout.html"
+    ],
+    "styles": [
+      "/bootstrap/css/bootstrap.min.css",
+      "/bootstrap/css/bootstrap-theme.min.css",
+      "/style.css"
+    ],
+    "roles": {
+        "*": true
+    },
+    "name": "layout",
+    "module": "view"
+}

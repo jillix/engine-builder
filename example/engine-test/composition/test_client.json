@@ -1,0 +1,19 @@
+{
+    "roles": {
+        "*": true
+    },
+    "name": "test_client",
+    "module": "/test/client.js",
+    "flow": {
+        "test": {
+            "d": [
+                [":data", {"num": 1}],
+                [".data", {"num": 2}],
+                [">>test", {"to": "test", "net": "ws"}],
+                [">*stream", {"num": "2.1"}],
+                [":data", {"num": 3}],
+                [".data", {"num": 4}]
+            ]
+        }
+    } 
+}

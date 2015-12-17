@@ -1,7 +1,7 @@
 // Dependencies
-var Parser = require("../lib")
-  , EngineTools = require("engine-tools")
-  , Typpy = require("typpy")
-  , SameTime = require("same-time")
-  ;
+const EngineBuilder = require("../lib");
 
+var eb = new EngineBuilder(`${__dirname}/engine-test`);
+eb.getGraph(function () {
+
+});

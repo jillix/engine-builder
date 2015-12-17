@@ -1,0 +1,39 @@
+{
+  "dependencies": {
+    "engine": "jillix/engine",
+    "view": "adioo/view"
+  },
+  "name": "engine-test",
+  "version": "0.1.0",
+  "author": "jillix <contact@jillix.com>",
+  "description": "Engine test app",
+  "contributors": [
+    "Adrian Ottiker <adrian@ottiker.com>",
+    "Ionică Bizău <bizauionica@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jillix/engine-test.git"
+  },
+  "engine": {
+    "node": ">=5"
+  },
+  "bugs": {
+    "url": "https://github.com/jillix/engine-test/issues"
+  },
+  "homepage": "https://github.com/jillix/engine-test",
+  "license": "MIT",
+    "scripts": {
+        "install": "./node_modules/engine/install .",
+        "start": "node ./node_modules/engine/engine -c ssl/dev.crt -k ssl/dev.key .",
+        "reload": "./node_modules/engine/install .; npm start"
+    },
+  "entrypoints": {
+    "private": {
+      "*": "layout"
+    },
+    "public": {
+      "*": "layout"
+    }
+  }
+}
