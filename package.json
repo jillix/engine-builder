@@ -25,7 +25,7 @@
   "author": "jillix <contact@jillix.com> (http://jillix.com)",
   "license": "MIT",
   "dependencies": {
-    "deffy": "^2.0.0",
+    "deffy": "^2.2.0",
     "engine-tools": "^1.19.0",
     "enny": "ionicabizau/enny",
     "idy": "^1.2.0",
