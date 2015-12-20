@@ -1,56 +1,24 @@
-# engine-parser
+# engine-builder
 
 Engine composition parser.
 
 ## Installation
 
 ```sh
-$ npm i engine-parser
+$ npm i --save engine-builder
 ```
 
 ## Example
 
 ```js
 // Dependencies
-var Parser = require("engine-parser")
-  , EngineTools = require("engine-tools")
-  , Typpy = require("typpy")
-  , SameTime = require("same-time")
-  ;
+const EngineBuilder = require("engine-builder");
 
-// Constants
-const APP = "service-dev";
-
-SameTime([
-    // Instances
-    EngineTools.getComposition.bind(EngineTools, APP, { iName: true })
-    // Get service file
-  , EngineTools.getService.bind(EngineTools, APP)
-  , EngineTools.getModuleInfo.bind(EngineTools, APP)
-], function (err, data) {
-    if (err) { return console.error(err); }
-    Parser(data[0], data[1], data[2], {
-        handleServer: false
-      , parseLines: false
-    }, function (err, data) {
-        console.log(err, data.prepare());
-    });
+var eb = new EngineBuilder(`${__dirname}/engine-test`);
+eb.getGraph(function (err, data) {
+    console.log(err || JSON.stringify(data, null, 4));
 });
 ```
-
-## Documentation
-
-### `Parser(input, appService, moduleInfo, callback)`
-Creates a new `Parser` instance.
-
-#### Params
-- **Object** `input`: The application instances object.
-- **Object** `appService`: The application service object.
-- **Object** `moduleInfo`: An object containing the module information.
-- **Function** `callback`: The callback function.
-
-#### Return
-- **Parser** The `Parser` instance.
 
 ## How to contribute
 Have an idea? Found a bug? See [how to contribute][contributing].
@@ -60,7 +28,9 @@ If you are using this library in one of your projects, add it in this list. :spa
 
 ## License
 
-See the [LICENSE](/LICENSE) file.
+[MIT][license] © [jillix][website]
 
+[license]: http://showalicense.com/?fullname=jillix%20%3Ccontact%40jillix.com%3E%20(http%3A%2F%2Fjillix.com)&year=2015#license-mit
+[website]: http://jillix.com
 [contributing]: /CONTRIBUTING.md
 [docs]: /DOCUMENTATION.md
