@@ -1,6 +1,6 @@
-# engine-builder
+# engine-builder [![Version](https://img.shields.io/npm/v/engine-builder.svg)](https://www.npmjs.com/package/engine-builder) [![Downloads](https://img.shields.io/npm/dt/engine-builder.svg)](https://www.npmjs.com/package/engine-builder)
 
-Engine composition parser.
+> Engine composition parser.
 
 ## Installation
 
@@ -19,6 +19,19 @@ eb.getGraph(function (err, data) {
     console.log(err || JSON.stringify(data, null, 4));
 });
 ```
+
+## Documentation
+
+### `getGraph(options, data, next)`
+Parses and sends back the application builder data. Note the `EngineBuilder` class
+is extended from `EngineParser`. So, all the methods available in `EngineParser`
+are accessible here as well.
+
+#### Params
+- **Object** `options`: The options object.
+- **Object** `data`: An object containing the following fields:
+ - `app` (String): The application name (**todo**: this is currently hardcoded as `service`.
+- **Function** `next`: The `next` handler used in flow.
 
 ## How to contribute
 Have an idea? Found a bug? See [how to contribute][contributing].
